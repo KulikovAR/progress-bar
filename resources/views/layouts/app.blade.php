@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Retro Progress Bars</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
@@ -70,5 +71,81 @@
     <div class="container">
         @yield('content')
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            const forms = document.querySelectorAll('form');
+            
+            forms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    if (!form.querySelector('input[name="_token"]')) {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = '_token';
+                        input.value = token;
+                        form.appendChild(input);
+                    }
+
+                    const formData = new FormData(form);
+                    const url = form.getAttribute('action');
+                    const method = form.querySelector('input[name="_method"]')?.value || 'POST';
+
+                    // Для PUT и DELETE запросов используем POST с _method
+                    const actualMethod = method === 'PUT' || method === 'DELETE' ? 'POST' : method;
+                    if (method === 'PUT' || method === 'DELETE') {
+                        formData.append('_method', method);
+                    }
+
+                    // Обрабатываем увеличение/уменьшение значения
+                    if (method === 'PUT') {
+                        const currentValue = parseInt(form.querySelector('input[name="value"]').value);
+                        const buttonText = form.querySelector('button[type="submit"]').textContent;
+                        const newValue = buttonText === '+10' ? currentValue + 10 : currentValue - 10;
+                        formData.set('value', newValue);
+                    }
+
+                    fetch(url, {
+                        method: actualMethod,
+                        body: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': token
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const progressBar = form.closest('.progress-bar');
+                            if (progressBar) {
+                                if (method === 'DELETE') {
+                                    progressBar.remove();
+                                } else {
+                                    const progressElement = progressBar.querySelector('.progress');
+                                    if (progressElement && data.value !== undefined) {
+                                        progressElement.style.width = data.value + '%';
+                                        
+                                        // Обновляем значения во всех формах прогресс-бара
+                                        const valueInputs = progressBar.querySelectorAll('input[name="value"]');
+                                        valueInputs.forEach(input => {
+                                            input.value = data.value;
+                                        });
+                                        
+                                        // Обновляем состояние кнопок
+                                        const plusButton = progressBar.querySelector('button[type="submit"]:not([disabled])');
+                                        const minusButton = progressBar.querySelector('button[type="submit"]:not([disabled]) + button');
+                                        
+                                        if (plusButton) plusButton.disabled = data.value >= 100;
+                                        if (minusButton) minusButton.disabled = data.value <= 0;
+                                    }
+                                }
+                            }
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                });
+            });
+        });
+    </script>
 </body>
 </html> 

@@ -65,7 +65,10 @@ class ProgressBarController extends Controller
 
         $progressBar->update($request->all());
 
-        return redirect()->route('progress-bars.index');
+        return response()->json([
+            'success' => true,
+            'value' => $progressBar->value
+        ]);
     }
 
     /**
@@ -74,6 +77,6 @@ class ProgressBarController extends Controller
     public function destroy(ProgressBar $progressBar)
     {
         $progressBar->delete();
-        return redirect()->route('progress-bars.index');
+        return response()->json(['success' => true]);
     }
 }
