@@ -98,13 +98,13 @@
                             <input type="hidden" name="_token" value="${token}">
                             <input type="hidden" name="_method" value="PUT">
                             <input type="hidden" name="value" value="${progressBar.value}">
-                            <button type="submit" ${progressBar.value >= 100 ? 'disabled' : ''}>+10</button>
+                            <button type="submit" data-action="decrease" ${progressBar.value <= 0 ? 'disabled' : ''}>-10</button>
                         </form>
                         <form action="/progress-bars/${progressBar.id}" method="POST" style="display: inline;">
                             <input type="hidden" name="_token" value="${token}">
                             <input type="hidden" name="_method" value="PUT">
                             <input type="hidden" name="value" value="${progressBar.value}">
-                            <button type="submit" ${progressBar.value <= 0 ? 'disabled' : ''}>-10</button>
+                            <button type="submit" data-action="increase" ${progressBar.value >= 100 ? 'disabled' : ''}>+10</button>
                         </form>
                         <form action="/progress-bars/${progressBar.id}" method="POST" style="display: inline;">
                             <input type="hidden" name="_token" value="${token}">
@@ -141,7 +141,7 @@
                     if (method === 'PUT') {
                         const currentValue = parseInt(form.querySelector('input[name="value"]').value);
                         const button = form.querySelector('button[type="submit"]');
-                        const isIncrease = button.textContent.trim() === '+10';
+                        const isIncrease = button.dataset.action === 'increase';
                         const newValue = isIncrease ? currentValue + 10 : currentValue - 10;
                         formData.set('value', newValue);
                     }

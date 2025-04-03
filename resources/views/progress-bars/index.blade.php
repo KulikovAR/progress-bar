@@ -22,13 +22,13 @@
                     @csrf
                     @method('PUT')
                     <input type="hidden" name="value" value="{{ $progressBar->value }}">
-                    <button type="submit" {{ $progressBar->value >= 100 ? 'disabled' : '' }}>+10</button>
+                    <button type="submit" data-action="decrease" {{ $progressBar->value <= 0 ? 'disabled' : '' }}>-10</button>
                 </form>
                 <form action="{{ route('progress-bars.update', $progressBar) }}" method="POST" style="display: inline;">
                     @csrf
                     @method('PUT')
                     <input type="hidden" name="value" value="{{ $progressBar->value }}">
-                    <button type="submit" {{ $progressBar->value <= 0 ? 'disabled' : '' }}>-10</button>
+                    <button type="submit" data-action="increase" {{ $progressBar->value >= 100 ? 'disabled' : '' }}>+10</button>
                 </form>
                 <form action="{{ route('progress-bars.destroy', $progressBar) }}" method="POST" style="display: inline;">
                     @csrf
