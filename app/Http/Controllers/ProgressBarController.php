@@ -12,7 +12,9 @@ class ProgressBarController extends Controller
      */
     public function index()
     {
-        $progressBars = ProgressBar::all();
+        $progressBars = ProgressBar::orderBy('completed')
+            ->orderBy('created_at', 'desc')
+            ->get();
         return view('progress-bars.index', compact('progressBars'));
     }
 

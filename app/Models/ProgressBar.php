@@ -9,5 +9,15 @@ class ProgressBar extends Model
     protected $fillable = [
         'name',
         'value',
+        'completed'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($progressBar) {
+            $progressBar->completed = $progressBar->value >= 100;
+        });
+    }
 }

@@ -24,6 +24,17 @@
             padding: 20px;
             margin-bottom: 20px;
             border-radius: 5px;
+            position: relative;
+        }
+        .progress-bar.completed {
+            opacity: 0.7;
+        }
+        .progress-bar.completed h3 {
+            text-decoration: line-through;
+            color: #0f0;
+        }
+        .progress-bar.completed .progress {
+            background-color: #0f0;
         }
         .progress-bar h3 {
             margin-top: 0;
@@ -78,7 +89,7 @@
             
             function createProgressBarHtml(progressBar) {
                 return `
-                    <div class="progress-bar" data-id="${progressBar.id}">
+                    <div class="progress-bar ${progressBar.completed ? 'completed' : ''}" data-id="${progressBar.id}">
                         <h3>${progressBar.name}</h3>
                         <div class="progress-container">
                             <div class="progress" style="width: ${progressBar.value}%"></div>
@@ -174,13 +185,20 @@
                                                 input.value = data.value;
                                             });
                                             
-                                            // Обновляем состояние кнопок
+                                            // Обновляем состояние кнопок и класс completed
                                             const buttons = progressBar.querySelectorAll('button[type="submit"]');
-                                            const plusButton = buttons[0]; // Первая кнопка - увеличение
-                                            const minusButton = buttons[1]; // Вторая кнопка - уменьшение
+                                            const plusButton = buttons[0];
+                                            const minusButton = buttons[1];
                                             
                                             if (plusButton) plusButton.disabled = data.value >= 100;
                                             if (minusButton) minusButton.disabled = data.value <= 0;
+                                            
+                                            // Обновляем класс completed
+                                            if (data.value >= 100) {
+                                                progressBar.classList.add('completed');
+                                            } else {
+                                                progressBar.classList.remove('completed');
+                                            }
                                         }
                                     }
                                 }
