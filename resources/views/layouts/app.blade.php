@@ -111,7 +111,8 @@
                         body: formData,
                         headers: {
                             'X-CSRF-TOKEN': token
-                        }
+                        },
+                        credentials: 'same-origin'
                     })
                     .then(response => response.json())
                     .then(data => {
