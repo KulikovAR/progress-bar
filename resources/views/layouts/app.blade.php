@@ -76,6 +76,31 @@
             const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             const forms = document.querySelectorAll('form');
             
+            function createProgressBarHtml(progressBar) {
+                return `
+                    <div class="progress-bar">
+                        <h3>${progressBar.name}</h3>
+                        <div class="progress-container">
+                            <div class="progress" style="width: ${progressBar.value}%"></div>
+                        </div>
+                        <form action="/progress-bars/${progressBar.id}" method="POST" style="display: inline;">
+                            <input type="hidden" name="_method" value="PUT">
+                            <input type="hidden" name="value" value="${progressBar.value}">
+                            <button type="submit" ${progressBar.value >= 100 ? 'disabled' : ''}>+10</button>
+                        </form>
+                        <form action="/progress-bars/${progressBar.id}" method="POST" style="display: inline;">
+                            <input type="hidden" name="_method" value="PUT">
+                            <input type="hidden" name="value" value="${progressBar.value}">
+                            <button type="submit" ${progressBar.value <= 0 ? 'disabled' : ''}>-10</button>
+                        </form>
+                        <form action="/progress-bars/${progressBar.id}" method="POST" style="display: inline;">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </div>
+                `;
+            }
+            
             forms.forEach(form => {
                 form.addEventListener('submit', function(e) {
                     e.preventDefault();
@@ -98,7 +123,7 @@
                         formData.append('_method', method);
                     }
 
-                    // Обрабатываем увеличение/уменьшение значения
+                    // Обрабатываем увеличение/уменьшение значения только для форм обновления
                     if (method === 'PUT') {
                         const currentValue = parseInt(form.querySelector('input[name="value"]').value);
                         const buttonText = form.querySelector('button[type="submit"]').textContent;
@@ -117,27 +142,44 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            const progressBar = form.closest('.progress-bar');
-                            if (progressBar) {
-                                if (method === 'DELETE') {
-                                    progressBar.remove();
-                                } else {
-                                    const progressElement = progressBar.querySelector('.progress');
-                                    if (progressElement && data.value !== undefined) {
-                                        progressElement.style.width = data.value + '%';
-                                        
-                                        // Обновляем значения во всех формах прогресс-бара
-                                        const valueInputs = progressBar.querySelectorAll('input[name="value"]');
-                                        valueInputs.forEach(input => {
-                                            input.value = data.value;
-                                        });
-                                        
-                                        // Обновляем состояние кнопок
-                                        const plusButton = progressBar.querySelector('button[type="submit"]:not([disabled])');
-                                        const minusButton = progressBar.querySelector('button[type="submit"]:not([disabled]) + button');
-                                        
-                                        if (plusButton) plusButton.disabled = data.value >= 100;
-                                        if (minusButton) minusButton.disabled = data.value <= 0;
+                            if (method === 'POST' && !form.closest('.progress-bar')) {
+                                // Добавляем новый прогресс-бар на страницу
+                                const addForm = document.querySelector('.add-form');
+                                const newProgressBar = document.createElement('div');
+                                newProgressBar.innerHTML = createProgressBarHtml(data.progressBar);
+                                addForm.insertAdjacentElement('afterend', newProgressBar.firstElementChild);
+                                
+                                // Очищаем форму
+                                form.reset();
+                                
+                                // Добавляем обработчики событий для новых форм
+                                const newForms = newProgressBar.querySelectorAll('form');
+                                newForms.forEach(newForm => {
+                                    newForm.addEventListener('submit', form.onsubmit);
+                                });
+                            } else {
+                                const progressBar = form.closest('.progress-bar');
+                                if (progressBar) {
+                                    if (method === 'DELETE') {
+                                        progressBar.remove();
+                                    } else {
+                                        const progressElement = progressBar.querySelector('.progress');
+                                        if (progressElement && data.value !== undefined) {
+                                            progressElement.style.width = data.value + '%';
+                                            
+                                            // Обновляем значения во всех формах прогресс-бара
+                                            const valueInputs = progressBar.querySelectorAll('input[name="value"]');
+                                            valueInputs.forEach(input => {
+                                                input.value = data.value;
+                                            });
+                                            
+                                            // Обновляем состояние кнопок
+                                            const plusButton = progressBar.querySelector('button[type="submit"]:not([disabled])');
+                                            const minusButton = progressBar.querySelector('button[type="submit"]:not([disabled]) + button');
+                                            
+                                            if (plusButton) plusButton.disabled = data.value >= 100;
+                                            if (minusButton) minusButton.disabled = data.value <= 0;
+                                        }
                                     }
                                 }
                             }

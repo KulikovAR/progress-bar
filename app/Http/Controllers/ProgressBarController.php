@@ -33,9 +33,16 @@ class ProgressBarController extends Controller
             'name' => 'required|string|max:255',
         ]);
 
-        ProgressBar::create($request->all());
+        $progressBar = ProgressBar::create($request->all());
 
-        return redirect()->route('progress-bars.index');
+        return response()->json([
+            'success' => true,
+            'progressBar' => [
+                'id' => $progressBar->id,
+                'name' => $progressBar->name,
+                'value' => $progressBar->value
+            ]
+        ]);
     }
 
     /**
