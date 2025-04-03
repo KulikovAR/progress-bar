@@ -19,12 +19,7 @@ class AppServiceProvider extends ServiceProvider
         if (App::environment(EnvironmentTypeEnum::notProductEnv())) {
             $this->app->register(\L5Swagger\L5SwaggerServiceProvider::class);
         }
-
-        if ($this->app->environment('production') || $this->app->environment('develop')) {
-            $this->app['request']->server->set('HTTPS', 'on');
-            URL::forceSchema('https');
-        }
-
+        
         $this->app->bind(AuthServiceContract::class, AuthService::class);
     }
 
