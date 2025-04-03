@@ -78,7 +78,7 @@
             
             function createProgressBarHtml(progressBar) {
                 return `
-                    <div class="progress-bar">
+                    <div class="progress-bar" data-id="${progressBar.id}">
                         <h3>${progressBar.name}</h3>
                         <div class="progress-container">
                             <div class="progress" style="width: ${progressBar.value}%"></div>
@@ -101,7 +101,7 @@
                 `;
             }
             
-            forms.forEach(form => {
+            function addFormHandlers(form) {
                 form.addEventListener('submit', function(e) {
                     e.preventDefault();
                     
@@ -126,8 +126,9 @@
                     // Обрабатываем увеличение/уменьшение значения только для форм обновления
                     if (method === 'PUT') {
                         const currentValue = parseInt(form.querySelector('input[name="value"]').value);
-                        const buttonText = form.querySelector('button[type="submit"]').textContent;
-                        const newValue = buttonText === '+10' ? currentValue + 10 : currentValue - 10;
+                        const button = form.querySelector('button[type="submit"]');
+                        const isIncrease = button.textContent.trim() === '+10';
+                        const newValue = isIncrease ? currentValue + 10 : currentValue - 10;
                         formData.set('value', newValue);
                     }
 
@@ -155,7 +156,7 @@
                                 // Добавляем обработчики событий для новых форм
                                 const newForms = newProgressBar.querySelectorAll('form');
                                 newForms.forEach(newForm => {
-                                    newForm.addEventListener('submit', form.onsubmit);
+                                    addFormHandlers(newForm);
                                 });
                             } else {
                                 const progressBar = form.closest('.progress-bar');
@@ -174,8 +175,9 @@
                                             });
                                             
                                             // Обновляем состояние кнопок
-                                            const plusButton = progressBar.querySelector('button[type="submit"]:not([disabled])');
-                                            const minusButton = progressBar.querySelector('button[type="submit"]:not([disabled]) + button');
+                                            const buttons = progressBar.querySelectorAll('button[type="submit"]');
+                                            const plusButton = buttons[0]; // Первая кнопка - увеличение
+                                            const minusButton = buttons[1]; // Вторая кнопка - уменьшение
                                             
                                             if (plusButton) plusButton.disabled = data.value >= 100;
                                             if (minusButton) minusButton.disabled = data.value <= 0;
@@ -187,6 +189,11 @@
                     })
                     .catch(error => console.error('Error:', error));
                 });
+            }
+            
+            // Добавляем обработчики для всех существующих форм
+            forms.forEach(form => {
+                addFormHandlers(form);
             });
         });
     </script>
