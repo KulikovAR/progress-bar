@@ -95,16 +95,19 @@
                             <div class="progress" style="width: ${progressBar.value}%"></div>
                         </div>
                         <form action="/progress-bars/${progressBar.id}" method="POST" style="display: inline;">
+                            <input type="hidden" name="_token" value="${token}">
                             <input type="hidden" name="_method" value="PUT">
                             <input type="hidden" name="value" value="${progressBar.value}">
                             <button type="submit" ${progressBar.value >= 100 ? 'disabled' : ''}>+10</button>
                         </form>
                         <form action="/progress-bars/${progressBar.id}" method="POST" style="display: inline;">
+                            <input type="hidden" name="_token" value="${token}">
                             <input type="hidden" name="_method" value="PUT">
                             <input type="hidden" name="value" value="${progressBar.value}">
                             <button type="submit" ${progressBar.value <= 0 ? 'disabled' : ''}>-10</button>
                         </form>
                         <form action="/progress-bars/${progressBar.id}" method="POST" style="display: inline;">
+                            <input type="hidden" name="_token" value="${token}">
                             <input type="hidden" name="_method" value="DELETE">
                             <button type="submit">Delete</button>
                         </form>
@@ -194,10 +197,20 @@
                                             if (minusButton) minusButton.disabled = data.value <= 0;
                                             
                                             // Обновляем класс completed
-                                            if (data.value >= 100) {
+                                            if (data.completed) {
                                                 progressBar.classList.add('completed');
                                             } else {
                                                 progressBar.classList.remove('completed');
+                                            }
+                                            
+                                            // Обновляем стили прогресса
+                                            if (progressElement) {
+                                                progressElement.style.width = data.value + '%';
+                                                if (data.completed) {
+                                                    progressElement.style.backgroundColor = '#0f0';
+                                                } else {
+                                                    progressElement.style.backgroundColor = '#0f0';
+                                                }
                                             }
                                         }
                                     }

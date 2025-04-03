@@ -42,7 +42,8 @@ class ProgressBarController extends Controller
             'progressBar' => [
                 'id' => $progressBar->id,
                 'name' => $progressBar->name,
-                'value' => $progressBar->value
+                'value' => $progressBar->value,
+                'completed' => $progressBar->completed
             ]
         ]);
     }
@@ -76,7 +77,8 @@ class ProgressBarController extends Controller
 
         return response()->json([
             'success' => true,
-            'value' => $progressBar->value
+            'value' => $progressBar->value,
+            'completed' => $progressBar->completed
         ]);
     }
 
