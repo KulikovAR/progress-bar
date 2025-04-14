@@ -15,7 +15,7 @@ class DesignController extends Controller
     public function select(Request $request)
     {
         $request->validate([
-            'design' => 'required|in:retro,modern,minimal'
+            'design' => 'required|in:retro,modern,minimal,neon,dark'
         ]);
 
         Session::put('selected_design', $request->design);

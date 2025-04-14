@@ -241,9 +241,172 @@
                 border: 1px solid #e1e1e1;
                 margin-right: 10px;
             }
+        @elseif($design === 'neon')
+            body {
+                font-family: 'Orbitron', sans-serif;
+                background-color: #1a1a1a;
+                color: #fff;
+                margin: 0;
+                padding: 20px;
+            }
+            .container {
+                max-width: 800px;
+                margin: 0 auto;
+            }
+            .progress-bar {
+                background-color: #2a2a2a;
+                border: 2px solid #ff00ff;
+                padding: 20px;
+                margin-bottom: 20px;
+                border-radius: 5px;
+                position: relative;
+                box-shadow: 0 0 10px #ff00ff;
+            }
+            .progress-bar .controls {
+                display: inline-block;
+            }
+            .progress-bar .delete-button {
+                position: absolute;
+                right: 20px;
+                top: 20px;
+            }
+            .progress-bar.completed {
+                opacity: 0.7;
+            }
+            .progress-bar.completed h3 {
+                text-decoration: line-through;
+                color: #ff00ff;
+            }
+            .progress-bar.completed .progress {
+                background-color: #ff00ff;
+            }
+            .progress-bar h3 {
+                margin-top: 0;
+                color: #fff;
+                text-shadow: 0 0 5px #ff00ff;
+            }
+            .progress-container {
+                width: 100%;
+                background-color: #333;
+                border: 1px solid #ff00ff;
+                height: 30px;
+                margin: 10px 0;
+            }
+            .progress {
+                height: 100%;
+                background-color: #ff00ff;
+                width: 0%;
+                transition: width 0.3s ease;
+                box-shadow: 0 0 10px #ff00ff;
+            }
+            button {
+                background-color: #ff00ff;
+                color: #fff;
+                border: none;
+                padding: 10px 20px;
+                margin: 5px;
+                cursor: pointer;
+                font-family: 'Orbitron', sans-serif;
+                text-shadow: 0 0 5px #fff;
+            }
+            button:hover {
+                background-color: #ff33ff;
+                box-shadow: 0 0 10px #ff00ff;
+            }
+            .add-form {
+                margin-bottom: 30px;
+            }
+            input[type="text"] {
+                background-color: #2a2a2a;
+                border: 2px solid #ff00ff;
+                color: #fff;
+                padding: 10px;
+                font-family: 'Orbitron', sans-serif;
+                margin-right: 10px;
+            }
+        @elseif($design === 'dark')
+            body {
+                font-family: 'Roboto', sans-serif;
+                background-color: #121212;
+                color: #fff;
+                margin: 0;
+                padding: 20px;
+            }
+            .container {
+                max-width: 800px;
+                margin: 0 auto;
+            }
+            .progress-bar {
+                background-color: #1e1e1e;
+                border: 1px solid #333;
+                padding: 20px;
+                margin-bottom: 20px;
+                border-radius: 5px;
+                position: relative;
+            }
+            .progress-bar .controls {
+                display: inline-block;
+            }
+            .progress-bar .delete-button {
+                position: absolute;
+                right: 20px;
+                top: 20px;
+            }
+            .progress-bar.completed {
+                opacity: 0.7;
+            }
+            .progress-bar.completed h3 {
+                text-decoration: line-through;
+                color: #666;
+            }
+            .progress-bar.completed .progress {
+                background-color: #666;
+            }
+            .progress-bar h3 {
+                margin-top: 0;
+                color: #fff;
+            }
+            .progress-container {
+                width: 100%;
+                background-color: #333;
+                height: 20px;
+                margin: 10px 0;
+                border-radius: 3px;
+            }
+            .progress {
+                height: 100%;
+                background-color: #444;
+                width: 0%;
+                transition: width 0.3s ease;
+            }
+            button {
+                background-color: #333;
+                color: #fff;
+                border: none;
+                padding: 8px 16px;
+                margin: 5px;
+                cursor: pointer;
+                border-radius: 3px;
+            }
+            button:hover {
+                background-color: #444;
+            }
+            .add-form {
+                margin-bottom: 30px;
+            }
+            input[type="text"] {
+                background-color: #1e1e1e;
+                border: 1px solid #333;
+                color: #fff;
+                padding: 8px 12px;
+                margin-right: 10px;
+                border-radius: 3px;
+            }
         @endif
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
@@ -367,9 +530,29 @@
                                             if (progressElement) {
                                                 progressElement.style.width = data.value + '%';
                                                 if (data.completed) {
-                                                    progressElement.style.backgroundColor = '#0f0';
+                                                    @if($design === 'retro')
+                                                        progressElement.style.backgroundColor = '#0f0';
+                                                    @elseif($design === 'modern')
+                                                        progressElement.style.backgroundColor = '#28a745';
+                                                    @elseif($design === 'minimal')
+                                                        progressElement.style.backgroundColor = '#666';
+                                                    @elseif($design === 'neon')
+                                                        progressElement.style.backgroundColor = '#ff00ff';
+                                                    @elseif($design === 'dark')
+                                                        progressElement.style.backgroundColor = '#666';
+                                                    @endif
                                                 } else {
-                                                    progressElement.style.backgroundColor = '#0f0';
+                                                    @if($design === 'retro')
+                                                        progressElement.style.backgroundColor = '#0f0';
+                                                    @elseif($design === 'modern')
+                                                        progressElement.style.backgroundColor = '#007bff';
+                                                    @elseif($design === 'minimal')
+                                                        progressElement.style.backgroundColor = '#333';
+                                                    @elseif($design === 'neon')
+                                                        progressElement.style.backgroundColor = '#ff00ff';
+                                                    @elseif($design === 'dark')
+                                                        progressElement.style.backgroundColor = '#444';
+                                                    @endif
                                                 }
                                             }
                                         }
