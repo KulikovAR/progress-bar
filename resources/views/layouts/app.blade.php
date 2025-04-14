@@ -416,41 +416,78 @@
         document.addEventListener('DOMContentLoaded', function() {
             const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             const forms = document.querySelectorAll('form');
-            
+
             function createProgressBarHtml(progressBar) {
+                const incrementButton = document.createElement('button');
+                incrementButton.textContent = '+25';
+                incrementButton.disabled = progressBar.value >= 100;
+
+                const decrementButton = document.createElement('button');
+                decrementButton.textContent = '-25';
+                decrementButton.disabled = progressBar.value <= 0 || progressBar.completed;
+
+                let progressColor;
+                if (progressBar.completed) {
+                    @if($design === 'retro')
+                        progressColor = '#0f0';
+                    @elseif($design === 'modern')
+                        progressColor = '#28a745';
+                    @elseif($design === 'minimal')
+                        progressColor = '#666';
+                    @elseif($design === 'neon')
+                        progressColor = '#ff00ff';
+                    @elseif($design === 'dark')
+                        progressColor = '#666';
+                    @endif
+                } else {
+                    @if($design === 'retro')
+                        progressColor = '#0f0';
+                    @elseif($design === 'modern')
+                        progressColor = '#007bff';
+                    @elseif($design === 'minimal')
+                        progressColor = '#333';
+                    @elseif($design === 'neon')
+                        progressColor = '#ff00ff';
+                    @elseif($design === 'dark')
+                        progressColor = '#444';
+                    @endif
+                }
+
                 return `
                     <div class="progress-bar ${progressBar.completed ? 'completed' : ''}" data-id="${progressBar.id}">
                         <h3>${progressBar.name}</h3>
                         <div class="progress-container">
-                            <div class="progress" style="width: ${progressBar.value}%"></div>
+                            <div class="progress" style="width: ${progressBar.value}%; background-color: ${progressColor}"></div>
                         </div>
-                        <div class="controls">
+                        <div style="display: flex; justify-content: space-between">
                             <form action="/progress-bars/${progressBar.id}" method="POST" style="display: inline;">
                                 <input type="hidden" name="_token" value="${token}">
-                                <input type="hidden" name="_method" value="PUT">
-                                <input type="hidden" name="value" value="${progressBar.value}">
-                                <button type="submit" data-action="decrease" ${progressBar.value <= 0 ? 'disabled' : ''}>-10</button>
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit">Удалить</button>
                             </form>
-                            <form action="/progress-bars/${progressBar.id}" method="POST" style="display: inline;">
-                                <input type="hidden" name="_token" value="${token}">
-                                <input type="hidden" name="_method" value="PUT">
-                                <input type="hidden" name="value" value="${progressBar.value}">
-                                <button type="submit" data-action="increase" ${progressBar.value >= 100 ? 'disabled' : ''}>+10</button>
-                            </form>
+                            <div>
+                                <form action="/progress-bars/${progressBar.id}" method="POST" style="display: inline;">
+                                    <input type="hidden" name="_token" value="${token}">
+                                    <input type="hidden" name="_method" value="PUT">
+                                    <input type="hidden" name="value" value="${progressBar.value}">
+                                    <button type="submit" data-action="decrease" ${progressBar.value <= 0 ? 'disabled' : ''}>-25</button>
+                                </form>
+                                <form action="/progress-bars/${progressBar.id}" method="POST" style="display: inline;">
+                                    <input type="hidden" name="_token" value="${token}">
+                                    <input type="hidden" name="_method" value="PUT">
+                                    <input type="hidden" name="value" value="${progressBar.value}">
+                                    <button type="submit" data-action="increase" ${progressBar.value >= 100 ? 'disabled' : ''}>+25</button>
+                                </form>
+                            </div>
                         </div>
-                        <form action="/progress-bars/${progressBar.id}" method="POST" class="delete-button">
-                            <input type="hidden" name="_token" value="${token}">
-                            <input type="hidden" name="_method" value="DELETE">
-                            <button type="submit">Delete</button>
-                        </form>
                     </div>
                 `;
             }
-            
+
             function addFormHandlers(form) {
                 form.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    
+
                     if (!form.querySelector('input[name="_token"]')) {
                         const input = document.createElement('input');
                         input.type = 'hidden';
@@ -472,7 +509,7 @@
                         const currentValue = parseInt(form.querySelector('input[name="value"]').value);
                         const button = form.querySelector('button[type="submit"]');
                         const isIncrease = button.dataset.action === 'increase';
-                        const newValue = isIncrease ? currentValue + 10 : currentValue - 10;
+                        const newValue = isIncrease ? currentValue + 25 : currentValue - 25;
                         formData.set('value', newValue);
                     }
 
@@ -492,9 +529,9 @@
                                 const newProgressBar = document.createElement('div');
                                 newProgressBar.innerHTML = createProgressBarHtml(data.progressBar);
                                 addForm.insertAdjacentElement('afterend', newProgressBar.firstElementChild);
-                                
+
                                 form.reset();
-                                
+
                                 const newForms = newProgressBar.querySelectorAll('form');
                                 newForms.forEach(newForm => {
                                     addFormHandlers(newForm);
@@ -508,25 +545,25 @@
                                         const progressElement = progressBar.querySelector('.progress');
                                         if (progressElement && data.value !== undefined) {
                                             progressElement.style.width = data.value + '%';
-                                            
+
                                             const valueInputs = progressBar.querySelectorAll('input[name="value"]');
                                             valueInputs.forEach(input => {
                                                 input.value = data.value;
                                             });
-                                            
+
                                             const buttons = progressBar.querySelectorAll('button[type="submit"]');
                                             const plusButton = buttons[0];
                                             const minusButton = buttons[1];
-                                            
+
                                             if (plusButton) plusButton.disabled = data.value >= 100;
-                                            if (minusButton) minusButton.disabled = data.value <= 0;
-                                            
+                                            if (minusButton) minusButton.disabled = data.value <= 0 || data.completed;
+
                                             if (data.completed) {
                                                 progressBar.classList.add('completed');
                                             } else {
                                                 progressBar.classList.remove('completed');
                                             }
-                                            
+
                                             if (progressElement) {
                                                 progressElement.style.width = data.value + '%';
                                                 if (data.completed) {
@@ -564,11 +601,11 @@
                     .catch(error => console.error('Error:', error));
                 });
             }
-            
+
             forms.forEach(form => {
                 addFormHandlers(form);
             });
         });
     </script>
 </body>
-</html> 
+</html>

@@ -221,6 +221,16 @@
     </div>
 
     <div class="design-container">
+        <div class="design-option minimal">
+            <h2>Минималистичный</h2>
+            <p>Простой и элегантный дизайн с акцентом на функциональность и чистоту</p>
+            <form action="{{ route('select-design') }}" method="POST">
+                @csrf
+                <input type="hidden" name="design" value="minimal">
+                <button type="submit">Выбрать</button>
+            </form>
+        </div>
+
         <div class="design-option retro">
             <h2>Ретро</h2>
             <p>Классический ретро-стиль с зеленым текстом на черном фоне, вдохновленный старыми компьютерными терминалами</p>
@@ -231,22 +241,12 @@
             </form>
         </div>
 
-        <div class="design-option modern">
-            <h2>Современный</h2>
-            <p>Современный дизайн с синими акцентами, чистый и профессиональный стиль</p>
+        <div class="design-option dark">
+            <h2>Темный</h2>
+            <p>Темная тема с контрастными элементами, идеально подходит для работы в ночное время</p>
             <form action="{{ route('select-design') }}" method="POST">
                 @csrf
-                <input type="hidden" name="design" value="modern">
-                <button type="submit">Выбрать</button>
-            </form>
-        </div>
-
-        <div class="design-option minimal">
-            <h2>Минималистичный</h2>
-            <p>Простой и элегантный дизайн с акцентом на функциональность и чистоту</p>
-            <form action="{{ route('select-design') }}" method="POST">
-                @csrf
-                <input type="hidden" name="design" value="minimal">
+                <input type="hidden" name="design" value="dark">
                 <button type="submit">Выбрать</button>
             </form>
         </div>
@@ -261,12 +261,12 @@
             </form>
         </div>
 
-        <div class="design-option dark">
-            <h2>Темный</h2>
-            <p>Темная тема с контрастными элементами, идеально подходит для работы в ночное время</p>
+        <div class="design-option modern">
+            <h2>Современный</h2>
+            <p>Современный дизайн с синими акцентами, чистый и профессиональный стиль</p>
             <form action="{{ route('select-design') }}" method="POST">
                 @csrf
-                <input type="hidden" name="design" value="dark">
+                <input type="hidden" name="design" value="modern">
                 <button type="submit">Выбрать</button>
             </form>
         </div>
