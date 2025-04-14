@@ -16,7 +16,10 @@ return new class extends Migration
             $table->string('name');
             $table->integer('value')->default(0);
             $table->boolean('completed')->default(false);
+            $table->bigInteger('user_id')->unsigned();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

@@ -22,11 +22,12 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'phone',
-        'code',
-        'phone_verified_at',
-        'code_send_at',
+        'email',
         'password',
+        'telegram_id',
+        'first_name',
+        'last_name',
+        'username',
     ];
 
     /**
@@ -50,4 +51,9 @@ class User extends Authenticatable
         'deleted_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function progressBars()
+    {
+        return $this->hasMany(ProgressBar::class);
+    }
 }

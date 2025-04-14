@@ -24,6 +24,10 @@ return new class extends Migration
             $table->timestamps();
             $table->rememberToken();
             $table->primary('id');
+            $table->bigInteger('telegram_id')->unique()->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('username')->nullable();
         });
     }
 
