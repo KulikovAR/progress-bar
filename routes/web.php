@@ -28,3 +28,6 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/storage/private/{filePath}', [PrivateStorageController::class, 'index'])->middleware(['signed', 'throttle:60,1'])->where(['filePath' => '.*'])->name('storage.private');
 
 Route::resource('progress-bars', ProgressBarController::class);
+
+Route::get('/', [App\Http\Controllers\DesignController::class, 'index'])->name('design');
+Route::post('/select-design', [App\Http\Controllers\DesignController::class, 'select'])->name('select-design');

@@ -4,79 +4,246 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Retro Progress Bars</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <title>Progress Bars</title>
     <style>
-        body {
-            font-family: 'Press Start 2P', cursive;
-            background-color: #000;
-            color: #0f0;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .progress-bar {
-            background-color: #333;
-            border: 2px solid #0f0;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            position: relative;
-        }
-        .progress-bar.completed {
-            opacity: 0.7;
-        }
-        .progress-bar.completed h3 {
-            text-decoration: line-through;
-            color: #0f0;
-        }
-        .progress-bar.completed .progress {
-            background-color: #0f0;
-        }
-        .progress-bar h3 {
-            margin-top: 0;
-            color: #0f0;
-        }
-        .progress-container {
-            width: 100%;
-            background-color: #222;
-            border: 1px solid #0f0;
-            height: 30px;
-            margin: 10px 0;
-        }
-        .progress {
-            height: 100%;
-            background-color: #0f0;
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-        button {
-            background-color: #0f0;
-            color: #000;
-            border: none;
-            padding: 10px 20px;
-            margin: 5px;
-            cursor: pointer;
-            font-family: 'Press Start 2P', cursive;
-        }
-        button:hover {
-            background-color: #00ff00;
-        }
-        .add-form {
-            margin-bottom: 30px;
-        }
-        input[type="text"] {
-            background-color: #222;
-            border: 2px solid #0f0;
-            color: #0f0;
-            padding: 10px;
-            font-family: 'Press Start 2P', cursive;
-            margin-right: 10px;
-        }
+        @php
+            $design = session('selected_design', 'retro');
+        @endphp
+
+        @if($design === 'retro')
+            body {
+                font-family: 'Press Start 2P', cursive;
+                background-color: #000;
+                color: #0f0;
+                margin: 0;
+                padding: 20px;
+            }
+            .container {
+                max-width: 800px;
+                margin: 0 auto;
+            }
+            .progress-bar {
+                background-color: #333;
+                border: 2px solid #0f0;
+                padding: 20px;
+                margin-bottom: 20px;
+                border-radius: 5px;
+                position: relative;
+            }
+            .progress-bar.completed {
+                opacity: 0.7;
+            }
+            .progress-bar.completed h3 {
+                text-decoration: line-through;
+                color: #0f0;
+            }
+            .progress-bar.completed .progress {
+                background-color: #0f0;
+            }
+            .progress-bar h3 {
+                margin-top: 0;
+                color: #0f0;
+            }
+            .progress-bar .controls {
+                display: inline-block;
+            }
+            .progress-bar .delete-button {
+                position: absolute;
+                right: 20px;
+                top: 20px;
+            }
+            .progress-container {
+                width: 100%;
+                background-color: #222;
+                border: 1px solid #0f0;
+                height: 30px;
+                margin: 10px 0;
+            }
+            .progress {
+                height: 100%;
+                background-color: #0f0;
+                width: 0%;
+                transition: width 0.3s ease;
+            }
+            button {
+                background-color: #0f0;
+                color: #000;
+                border: none;
+                padding: 10px 20px;
+                margin: 5px;
+                cursor: pointer;
+                font-family: 'Press Start 2P', cursive;
+            }
+            button:hover {
+                background-color: #00ff00;
+            }
+            .add-form {
+                margin-bottom: 30px;
+            }
+            input[type="text"] {
+                background-color: #222;
+                border: 2px solid #0f0;
+                color: #0f0;
+                padding: 10px;
+                font-family: 'Press Start 2P', cursive;
+                margin-right: 10px;
+            }
+        @elseif($design === 'modern')
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f8f9fa;
+                color: #333;
+                margin: 0;
+                padding: 20px;
+            }
+            .container {
+                max-width: 800px;
+                margin: 0 auto;
+            }
+            .progress-bar {
+                background-color: #fff;
+                border: 1px solid #dee2e6;
+                padding: 20px;
+                margin-bottom: 20px;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                position: relative;
+            }
+            .progress-bar.completed {
+                opacity: 0.7;
+            }
+            .progress-bar.completed h3 {
+                text-decoration: line-through;
+                color: #28a745;
+            }
+            .progress-bar.completed .progress {
+                background-color: #28a745;
+            }
+            .progress-bar h3 {
+                margin-top: 0;
+                color: #333;
+            }
+            .progress-bar .controls {
+                display: inline-block;
+            }
+            .progress-bar .delete-button {
+                position: absolute;
+                right: 20px;
+                top: 20px;
+            }
+            .progress-container {
+                width: 100%;
+                background-color: #e9ecef;
+                border-radius: 4px;
+                height: 20px;
+                margin: 10px 0;
+                overflow: hidden;
+            }
+            .progress {
+                height: 100%;
+                background-color: #007bff;
+                width: 0%;
+                transition: width 0.3s ease;
+            }
+            button {
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+                padding: 8px 16px;
+                margin: 5px;
+                cursor: pointer;
+                border-radius: 4px;
+                font-size: 14px;
+            }
+            button:hover {
+                background-color: #0056b3;
+            }
+            .add-form {
+                margin-bottom: 30px;
+            }
+            input[type="text"] {
+                padding: 8px 12px;
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+                margin-right: 10px;
+            }
+        @elseif($design === 'minimal')
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+                background-color: #fff;
+                color: #333;
+                margin: 0;
+                padding: 20px;
+            }
+            .container {
+                max-width: 800px;
+                margin: 0 auto;
+            }
+            .progress-bar {
+                background-color: #fff;
+                border: 1px solid #e1e1e1;
+                padding: 20px;
+                margin-bottom: 20px;
+                position: relative;
+            }
+            .progress-bar .controls {
+                display: inline-block;
+            }
+            .progress-bar .delete-button {
+                position: absolute;
+                right: 20px;
+                top: 20px;
+            }
+            .progress-bar.completed {
+                opacity: 0.7;
+            }
+            .progress-bar.completed h3 {
+                text-decoration: line-through;
+                color: #666;
+            }
+            .progress-bar.completed .progress {
+                background-color: #666;
+            }
+            .progress-bar h3 {
+                margin-top: 0;
+                color: #333;
+                font-weight: 500;
+            }
+            .progress-container {
+                width: 100%;
+                background-color: #f5f5f5;
+                height: 2px;
+                margin: 10px 0;
+            }
+            .progress {
+                height: 100%;
+                background-color: #333;
+                width: 0%;
+                transition: width 0.3s ease;
+            }
+            button {
+                background-color: #333;
+                color: #fff;
+                border: none;
+                padding: 6px 12px;
+                margin: 5px;
+                cursor: pointer;
+                font-size: 13px;
+            }
+            button:hover {
+                background-color: #444;
+            }
+            .add-form {
+                margin-bottom: 30px;
+            }
+            input[type="text"] {
+                padding: 6px 10px;
+                border: 1px solid #e1e1e1;
+                margin-right: 10px;
+            }
+        @endif
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
@@ -94,19 +261,21 @@
                         <div class="progress-container">
                             <div class="progress" style="width: ${progressBar.value}%"></div>
                         </div>
-                        <form action="/progress-bars/${progressBar.id}" method="POST" style="display: inline;">
-                            <input type="hidden" name="_token" value="${token}">
-                            <input type="hidden" name="_method" value="PUT">
-                            <input type="hidden" name="value" value="${progressBar.value}">
-                            <button type="submit" data-action="decrease" ${progressBar.value <= 0 ? 'disabled' : ''}>-10</button>
-                        </form>
-                        <form action="/progress-bars/${progressBar.id}" method="POST" style="display: inline;">
-                            <input type="hidden" name="_token" value="${token}">
-                            <input type="hidden" name="_method" value="PUT">
-                            <input type="hidden" name="value" value="${progressBar.value}">
-                            <button type="submit" data-action="increase" ${progressBar.value >= 100 ? 'disabled' : ''}>+10</button>
-                        </form>
-                        <form action="/progress-bars/${progressBar.id}" method="POST" style="display: inline;">
+                        <div class="controls">
+                            <form action="/progress-bars/${progressBar.id}" method="POST" style="display: inline;">
+                                <input type="hidden" name="_token" value="${token}">
+                                <input type="hidden" name="_method" value="PUT">
+                                <input type="hidden" name="value" value="${progressBar.value}">
+                                <button type="submit" data-action="decrease" ${progressBar.value <= 0 ? 'disabled' : ''}>-10</button>
+                            </form>
+                            <form action="/progress-bars/${progressBar.id}" method="POST" style="display: inline;">
+                                <input type="hidden" name="_token" value="${token}">
+                                <input type="hidden" name="_method" value="PUT">
+                                <input type="hidden" name="value" value="${progressBar.value}">
+                                <button type="submit" data-action="increase" ${progressBar.value >= 100 ? 'disabled' : ''}>+10</button>
+                            </form>
+                        </div>
+                        <form action="/progress-bars/${progressBar.id}" method="POST" class="delete-button">
                             <input type="hidden" name="_token" value="${token}">
                             <input type="hidden" name="_method" value="DELETE">
                             <button type="submit">Delete</button>
@@ -131,13 +300,11 @@
                     const url = form.getAttribute('action');
                     const method = form.querySelector('input[name="_method"]')?.value || 'POST';
 
-                    // Для PUT и DELETE запросов используем POST с _method
                     const actualMethod = method === 'PUT' || method === 'DELETE' ? 'POST' : method;
                     if (method === 'PUT' || method === 'DELETE') {
                         formData.append('_method', method);
                     }
 
-                    // Обрабатываем увеличение/уменьшение значения только для форм обновления
                     if (method === 'PUT') {
                         const currentValue = parseInt(form.querySelector('input[name="value"]').value);
                         const button = form.querySelector('button[type="submit"]');
@@ -158,16 +325,13 @@
                     .then(data => {
                         if (data.success) {
                             if (method === 'POST' && !form.closest('.progress-bar')) {
-                                // Добавляем новый прогресс-бар на страницу
                                 const addForm = document.querySelector('.add-form');
                                 const newProgressBar = document.createElement('div');
                                 newProgressBar.innerHTML = createProgressBarHtml(data.progressBar);
                                 addForm.insertAdjacentElement('afterend', newProgressBar.firstElementChild);
                                 
-                                // Очищаем форму
                                 form.reset();
                                 
-                                // Добавляем обработчики событий для новых форм
                                 const newForms = newProgressBar.querySelectorAll('form');
                                 newForms.forEach(newForm => {
                                     addFormHandlers(newForm);
@@ -182,13 +346,11 @@
                                         if (progressElement && data.value !== undefined) {
                                             progressElement.style.width = data.value + '%';
                                             
-                                            // Обновляем значения во всех формах прогресс-бара
                                             const valueInputs = progressBar.querySelectorAll('input[name="value"]');
                                             valueInputs.forEach(input => {
                                                 input.value = data.value;
                                             });
                                             
-                                            // Обновляем состояние кнопок и класс completed
                                             const buttons = progressBar.querySelectorAll('button[type="submit"]');
                                             const plusButton = buttons[0];
                                             const minusButton = buttons[1];
@@ -196,14 +358,12 @@
                                             if (plusButton) plusButton.disabled = data.value >= 100;
                                             if (minusButton) minusButton.disabled = data.value <= 0;
                                             
-                                            // Обновляем класс completed
                                             if (data.completed) {
                                                 progressBar.classList.add('completed');
                                             } else {
                                                 progressBar.classList.remove('completed');
                                             }
                                             
-                                            // Обновляем стили прогресса
                                             if (progressElement) {
                                                 progressElement.style.width = data.value + '%';
                                                 if (data.completed) {
@@ -222,7 +382,6 @@
                 });
             }
             
-            // Добавляем обработчики для всех существующих форм
             forms.forEach(form => {
                 addFormHandlers(form);
             });
